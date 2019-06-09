@@ -1,4 +1,5 @@
 from flask import Flask ,session
+from flask.ext.script import Manager
 from redis import StrictRedis
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
@@ -45,6 +46,8 @@ CSRFProtect(app)
 #设置Session保存指定位置
 Session(app)
 
+
+manager = Manager(app)
 @app.route('/')
 def hello_world():
     session["name"] = "itheima"
@@ -52,4 +55,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run()
+    manager.run()
