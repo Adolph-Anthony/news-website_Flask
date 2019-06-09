@@ -1,7 +1,8 @@
+from flask import current_app
 from flask import session
 from flask_script import Manager
 from flask_migrate import Migrate,MigrateCommand
-
+import logging
 from info import db, create_app
 
 #通过指定的配置名字创建对应配置的app
@@ -17,7 +18,16 @@ manager.add_command("db",MigrateCommand)
 manager = Manager(app)
 @app.route('/')
 def hello_world():
-    session["name"] = "itheima"
+    # session["name"] = "itheima"
+
+    #测试打印日志
+    logging.debug("This is a debug log.")
+    logging.info("This is a info log.")
+    logging.warning("This is a warning log.")
+    logging.error("This is a error log.")
+    logging.critical("This is a critical log.")
+
+    current_app.logger.error("测试error")
     return 'Hello World!'
 
 
