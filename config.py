@@ -30,7 +30,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     '''开发环境下的配置'''
     DEBUG = True
-    LOG_LEVEL = logging.ERROR
+    LOG_LEVEL = logging.DEBUG
 
 class ProductionConfig(Config):
     '''生产环境下的配置'''
