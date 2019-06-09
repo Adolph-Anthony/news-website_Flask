@@ -1,10 +1,12 @@
 from flask import Flask ,session
-from flask.ext.script import Manager
+from flask_script import Manager
 from redis import StrictRedis
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 #可以用来指定session保存位置
 from flask_session import Session
+from flask_migrate import Migrate,MigrateCommand
+
 
 class Config(object):
     '''项目的配置'''
@@ -46,6 +48,11 @@ CSRFProtect(app)
 #设置Session保存指定位置
 Session(app)
 
+manager = Manager(app)
+#将app与db关联
+Migrate(app,db)
+#将迁移命令添加到manager中
+manager.add_command("db",MigrateCommand)
 
 manager = Manager(app)
 @app.route('/')
