@@ -17,6 +17,7 @@ $(function(){
 
     })
 
+
     // TODO 取消关注当前作者
     $(".focused").click(function () {
 
