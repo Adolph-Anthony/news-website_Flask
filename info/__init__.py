@@ -11,7 +11,7 @@ from config import config
 
 #初始化数据库
 #在flask里很多扩展都可以先初始化扩展的对象,然后再去调用init_app方法去初始化
-db = SQLAlchemy
+db = SQLAlchemy()
 
 #变量的注释
 redis_store = None  #type:StrictRedis
@@ -31,8 +31,8 @@ def setup_log(config_name):
 def create_app(config_name):
     setup_log(config_name)
     app = Flask(__name__)
+    #从对象中得到
     app.config.from_object(config[config_name])
-
     #初始化数据库
     db.init_app(app)
     #初始化redis 存储对象
