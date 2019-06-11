@@ -32,7 +32,7 @@ def get_image_code():
 
     # 4.保存图片验证码文字到redis
     try:
-        redis_store.set("imageCodeId"+image_code_id,text,constants.IMAGE_CODE_REDIS_EXPIRES)
+        redis_store.set("ImageCodeId"+image_code_id,text,constants.IMAGE_CODE_REDIS_EXPIRES)
     except Exception as e:
         current_app.logger.error(e)
         abort(500)

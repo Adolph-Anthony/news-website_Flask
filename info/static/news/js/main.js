@@ -155,7 +155,7 @@ function generateImageCode() {
     //浏览器要发起图片验证码请求/image_code?imageCodeId=xxxxxx
     imageCodeId = generateUUID();
     //生成url
-    var url ="image_code?imageCodeId="+imageCodeId;
+    var url ="/passport/image_code?imageCodeId="+imageCodeId;
     //给指定img标签设置src,设置了地址之后,img标签就会去向这个地址发起请求
     $(".get_pic_code").attr("src",url)
 }
@@ -192,7 +192,7 @@ function fnChangeMenu(n) {
     }
 }
 
-// 一般页面的iframe的高度是660
+// 一般页面的iframe的高度是660url_prefix
 // 新闻发布页面iframe的高度是900
 function fnSetIframeHeight(num){
 	var $frame = $('#main_frame');
