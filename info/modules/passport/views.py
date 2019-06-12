@@ -82,9 +82,6 @@ def send_sms_code():
 
 
 
-
-
-
 @passport_blu.route('/image_code')
 def get_image_code():
     '''
