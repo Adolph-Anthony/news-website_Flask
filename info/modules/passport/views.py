@@ -14,6 +14,36 @@ from info.utils.captcha.captcha import captcha
 from info.utils.response_code import RET
 from . import passport_blu
 
+# @passport_blu.route("/register",methods=["POST"])
+# def register():
+#     '''
+#     注册的逻辑
+#     １．获取参数
+#     ２．校验参数
+#     ３．取到服务器保存的真实的短信验证码内容
+#     ４．校验用户输入的短信验证码内容和真实的验证码内容是否一致
+#     ５．如果一致，初始化User模型，并且赋值属性
+#     ６．将user模型添加数据库
+#     ７．返回响应
+#     :return:
+#     '''
+#     # １．获取参数
+#     param_dict = request.json
+#     mobile = param_dict.get("mobile")
+#     smscode = param_dict.get("smscode")
+#     password = param_dict.get("password")
+#
+#     # ２．校验参数
+#     if not all([mobile,smscode,password]):
+#         return jsonify(errno= RET.PARAMERR,errmsg="参数")
+    # ３．取到服务器保存的真实的短信验证码内容
+    # ４．校验用户输入的短信验证码内容和真实的验证码内容是否一致
+    # ５．如果一致，初始化User模型，并且赋值属性
+    # ６．将user模型添加数据库
+    # ７．返回响应
+
+
+
 @passport_blu.route('/sms_code', methods=["POST"])
 def send_sms_code():
     """
@@ -27,8 +57,8 @@ def send_sms_code():
     7. 告知发送结果
     :return:
     """
-
-    '{"mobiel": "18811111111", "image_code": "AAAA", "image_code_id": "u23jksdhjfkjh2jh4jhdsj"}'
+    print("1")
+    # '{"mobiel": "18811111111", "image_code": "AAAA", "image_code_id": ""}'
     # 1. 获取参数：手机号，图片验证码内容，图片验证码的编号 (随机值)
     # params_dict = json.loads(request.data)
     params_dict = request.json
@@ -48,7 +78,7 @@ def send_sms_code():
 
     # 3. 先从redis中取出真实的验证码内容
     try:
-        real_image_code = redis_store.get("ImageCodeId_" + image_code_id)
+        real_image_code = redis_store.get("ImageCodeId" + image_code_id)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据查询失败")
