@@ -30,6 +30,16 @@ class User(BaseModel, db.Model):
     """用户"""
     __tablename__ = "info_user"
 
+    @property
+    def password(self):
+        raise ArithmeticError("当前属性不允许读取")
+    @password.setter
+    def password(self,value):
+        #只要对 user.password =password 赋值 就会传入函数
+        self.password_hash=generate_password_hash(value)
+
+
+
     id = db.Column(db.Integer, primary_key=True)  # 用户编号
     nick_name = db.Column(db.String(32), unique=True, nullable=False)  # 用户昵称
     password_hash = db.Column(db.String(128), nullable=False)  # 加密的密码

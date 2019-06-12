@@ -66,8 +66,9 @@ def register():
     #暂时没有昵称使用手机号代替
     user.nick_name = mobile
 
-    # TODO 对密码做处理
-    user.password_hash =password
+    #  对密码做处理
+    # 需求:在设置password的时候,去对password进行加密,并且将加密结果给user.password_hash赋值
+    user.password =password
 
     # ６．将user模型添加数据库
     try:
