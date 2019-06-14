@@ -185,7 +185,7 @@ $(function(){
             "smscode": smscode,
             "password": password
         }
-
+//以下后端按钮注册逻辑
         $.ajax({
             url: "/passport/register",
             type: "post",
@@ -197,6 +197,7 @@ $(function(){
             success: function (resp) {
                 if (resp.errno == "0") {
                     // 代表注册成功就代表登录成功
+                    //注册完成后自动跳转到首页
                     location.reload()
                 }else {
                     // 代表注册失败
@@ -206,7 +207,7 @@ $(function(){
                 }
             }
         })
-
+//以下后端按钮注册逻辑
 
     })
 })

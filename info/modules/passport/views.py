@@ -49,13 +49,13 @@ def register():
     except Exception as e:
         #日志记录错误
         current_app.logger.error(e)
-        return jsonify(error = RET.DBERR,errmsg = "数据查询失败")
+        return jsonify(errno = RET.DBERR,errmsg = "数据查询失败")
 
     if not real_sms_code:
-        return jsonify(error = RET.NODATA,errmsg = "验证码过期")
+        return jsonify(errno = RET.NODATA,errmsg = "验证码过期")
     # ４．校验用户输入的短信验证码内容和真实的验证码内容是否一致
     if real_sms_code !=smscode:
-        return jsonify(error = RET.DATAERR,errmsg = "验证码错误")
+        return jsonify(errno = RET.DATAERR,errmsg = "验证码错误")
 
 
     # ５．如果一致，初始化User模型，并且赋值属性
@@ -77,7 +77,7 @@ def register():
     except Exception as e:
         current_app.logger.error(e)
         db.session.rollback()
-        return jsonify(error = RET.DBERR,errmsg = "数据保存失败")
+        return jsonify(errno = RET.DBERR,errmsg = "数据保存失败")
 
     #注册成功之后应该默认往session中保存数据表示当前已经登录
     from flask import session
@@ -85,7 +85,7 @@ def register():
     session["mobile"] = user.mobile
     session["nick_name"] = user.nick_name
     # ７．返回响应
-    return jsonify(error=RET.OK, errmsg="注册成功")
+    return jsonify(errno=RET.OK, errmsg="注册成功")
 
 
 @passport_blu.route('/sms_code', methods=["POST"])
