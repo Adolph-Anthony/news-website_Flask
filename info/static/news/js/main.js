@@ -102,6 +102,7 @@ $(function(){
 		$(this).find('a')[0].click()
 	})
 
+
     // 登录表单提交
     $(".login_form_con").submit(function (e) {
         e.preventDefault()
@@ -117,7 +118,7 @@ $(function(){
             $("#login-password-err").show();
             return;
         }
-
+//以下登录前段逻辑实现
         // 发起登录请求
         var params = {
             "mobile": mobile,
@@ -144,7 +145,7 @@ $(function(){
                 }
             }
         })
-
+//以上登录前段逻辑实现
 
     })
 
