@@ -20,7 +20,9 @@ def new_list():
     cid = request.args.get("cid","1")
     page = request.args.get("page","1")
     per_page = request.args.get("per_page","10")
-
+    print(cid)
+    print(page)
+    print(per_page)
     #2.校验参数
     try:
         page = int(page)
