@@ -39,6 +39,9 @@ class User(BaseModel, db.Model):
         self.password_hash=generate_password_hash(value)
 
 
+    def check_password(self,password):
+        '''校验密码,返回明文密码'''
+        return check_password_hash(self.password_hash,password)
 
     id = db.Column(db.Integer, primary_key=True)  # 用户编号
     nick_name = db.Column(db.String(32), unique=True, nullable=False)  # 用户昵称
