@@ -65,7 +65,6 @@ class User(BaseModel, db.Model):
                                 secondary=tb_user_follows,
                                 primaryjoin=id == tb_user_follows.c.followed_id,
                                 secondaryjoin=id == tb_user_follows.c.follower_id,
-                                backref=db.backref('followed', lazy='dynamic'),
                                 lazy='dynamic')
 
     # 当前用户所发布的新闻
