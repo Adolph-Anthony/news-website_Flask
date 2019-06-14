@@ -52,7 +52,7 @@ def new_list():
     for news in news_list:
         news_dict_li.append(news.to_basic_dict())
     data = {
-        'toral_page':total_page,
+        'total_page':total_page,
         'current_page':current_page,
         'news_dict_li':news_dict_li
 
