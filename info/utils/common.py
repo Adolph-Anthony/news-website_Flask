@@ -5,10 +5,8 @@ def do_index_class(index):
     :return:
     '''
     if index == 0:
-        print(1)
         return "first"
     elif index ==1:
-        print(2)
         return "second"
     elif index==2:
         return "third"
