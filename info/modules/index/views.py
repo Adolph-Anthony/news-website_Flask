@@ -12,7 +12,7 @@ def index():
     1.如果用户已经登录,将当前登录用户数据传到模板中,以供显示
     :return:
     '''
-    #向redis中保存一个值
+    #取到用户id
     user_id = session.get("user_id",None)
     user = None
     if user_id:

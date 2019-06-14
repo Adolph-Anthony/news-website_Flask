@@ -7,12 +7,28 @@ from flask import json
 from flask import make_response
 from flask import render_template
 from flask import request
+from flask import session
+
 from info import constants, redis_store, db
 from info.lib.yuntongxun.sms import CCP
 from info.models import User
 from info.utils.captcha.captcha import captcha
 from info.utils.response_code import RET
 from . import passport_blu
+
+
+
+@passport_blu.route("/logout",)
+def logout():
+    '''
+    退出登录
+    :return:
+    '''
+    #pop 是移除
+    session.pop("user_id",None)
+    session.pop("mobile",None)
+    session.pop("nick_name",None)
+    return jsonify(errno = RET.OK,errmsg = "退出成功")
 
 @passport_blu.route("/login",methods=["POST"])
 def login():
@@ -53,7 +69,6 @@ def login():
         return jsonify(errno = RET.PWDERR,errmsg = "用户名或者密码错误")
 
     # 4.保存用户的登录状态
-    from flask import session
     session["user_id"] = user.id
     session["mobile"] = user.mobile
     session["nick_name"] = user.nick_name
@@ -126,7 +141,6 @@ def register():
         return jsonify(errno = RET.DBERR,errmsg = "数据保存失败")
 
     #注册成功之后应该默认往session中保存数据表示当前已经登录
-    from flask import session
     session["user_id"] = user.id
     session["mobile"] = user.mobile
     session["nick_name"] = user.nick_name
