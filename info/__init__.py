@@ -11,6 +11,8 @@ from config import config
 
 #初始化数据库
 #在flask里很多扩展都可以先初始化扩展的对象,然后再去调用init_app方法去初始化
+from info.utils.common import do_index_class
+
 db = SQLAlchemy()
 
 #变量的注释
@@ -45,6 +47,9 @@ def create_app(config_name):
     CSRFProtect(app)
     #设置Session保存指定位置
     Session(app)
+    #添加一个自定义过滤器
+    app.add_template_filter(do_index_class,"index_class")
+
 
     @app.after_request
     def after_request(response):
