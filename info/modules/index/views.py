@@ -20,9 +20,7 @@ def new_list():
     cid = request.args.get("cid","1")
     page = request.args.get("page","1")
     per_page = request.args.get("per_page","10")
-    print(cid)
-    print(page)
-    print(per_page)
+
     #2.校验参数
     try:
         page = int(page)
@@ -40,21 +38,21 @@ def new_list():
         paginate = News.query.filter(*filters).order_by(News.create_time.desc()).paginate(page,per_page,False)
     except Exception as e:
         current_app.logger.error(e)
-        return jsonify(errno=RET.DBERR, errmsg="数据查询错误")
+        return jsonify(errno=RET.DATAERR, errmsg="数据查询错误")
 
     #取到当前页数据
-    news_model_list= paginate.items    #模型对象列表
+    news_list= paginate.items    #模型对象列表
     #总页数
-    toral_page = paginate.pages
+    total_page = paginate.pages
     #当前页
     current_page = paginate.page
 
     #将模型对象列表转成字典列表
     news_dict_li = []
-    for news in news_model_list:
+    for news in news_list:
         news_dict_li.append(news.to_basic_dict())
     data = {
-        "toral_page":toral_page,
+        'toral_page':total_page,
         'current_page':current_page,
         'news_dict_li':news_dict_li
 
