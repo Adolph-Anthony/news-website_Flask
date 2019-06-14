@@ -73,6 +73,16 @@ def login():
     session["mobile"] = user.mobile
     session["nick_name"] = user.nick_name
 
+    #最后一次用户登录时间
+    #如果在视图函数中,对模型身上的属性有修改,需要commit到数据库保存
+    #但是其实不用自己去写b.session.commit(),前提是对SQLAchemy有过配置
+    user.last_login = datetime.now()
+    # try:
+    #     db.session.commit()
+    # except Exception as e:
+    #     db.session.rollback()
+    #     current_app.logger.error(e)
+
     # 5.响应
     return jsonify(errno=RET.OK, errmsg="登录成功")
 
