@@ -9,7 +9,7 @@ $(function () {
     updateNewsData()
 
     // 首页分类切换
-    $('.menu li').click(function () {
+    $('.menu l i').click(function () {
         // 取到指定分类的cid
         var clickCid = $(this).attr('data-cid')
         // 遍历所有的 li 移除身上的选中效果
