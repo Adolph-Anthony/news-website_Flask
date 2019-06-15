@@ -52,6 +52,7 @@ def new_list():
     #遍历对象列表,将对象的字典添加到字典列表中
     for news in news_list:
         news_dict_li.append(news.to_basic_dict())
+        # print(news.to_basic_dict())
     data = {
         'total_page':total_page,
         'current_page':current_page,
@@ -85,7 +86,9 @@ def index():
         news_list = News.query.order_by(News.clicks.desc()).limit(constants.CLICK_RANK_MAX_NEWS)
     except Exception as e:
         current_app.logger.error(e)
-
+    news_dict_li = []
+    for news in news_list:
+        news_dict_li.append(news.to_basic_dict())
 
     # 将模型对象列表转成字典列表
     categories = Category.query.all()
@@ -94,9 +97,7 @@ def index():
     for category in categories:
         category_li.append(category.to_dict())
 
-    news_dict_li = []
-    for news in news_list:
-        news_dict_li.append(news.to_basic_dict())
+
 
     data = {
         "user":user.to_dict() if user else None,
