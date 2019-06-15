@@ -64,10 +64,11 @@ $(function () {
 })
 
 function updateNewsData() {
-    // 更新新闻数据
+    // 更新新闻数据,给后端从url地址中拿取参数
     var params = {
         "cid": currentCid,
         "page": cur_page
+
     }
     $.get("/news_list", params, function (resp) {
         // 数据加载完毕，设置【正在加载数据】的变量为 false 代表当前没有在加载数据

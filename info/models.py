@@ -107,7 +107,7 @@ class News(BaseModel, db.Model):
     content = db.Column(db.Text, nullable=False)  # 新闻内容
     clicks = db.Column(db.Integer, default=0)  # 浏览量
     index_image_url = db.Column(db.String(256))  # 新闻列表图片路径
-    category_id = db.Column(db.Integer, db.ForeignKey("info_category.id"))
+    category_id = db.Column(db.Integer, db.ForeignKey("info_category.id")) #新闻分类id
     user_id = db.Column(db.Integer, db.ForeignKey("info_user.id"))  # 当前新闻的作者id
     status = db.Column(db.Integer, default=0)  # 当前新闻状态 如果为0代表审核通过，1代表审核中，-1代表审核不通过
     reason = db.Column(db.String(256))  # 未通过原因，status = -1 的时候使用
