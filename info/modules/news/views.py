@@ -5,15 +5,75 @@ from flask import render_template
 from flask import request
 from flask import session
 
-from info import constants
-from info.models import News, User
+from info import constants, db
+from info.models import News, User, Comment
 from info.modules.news import news_blu
 
 #127.0.0.1:5000/news/1
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
 
-@news_blu.route("/newscollect",methods =["POST"] )
+@news_blu.route("/news_comment",methods = ["POST"])
+@user_login_data
+def comment():
+    '''
+    评论新闻或者回复某条新闻
+    参数名	        类型	    是否必须	参数说明
+    news_id	        int	    是	    新闻id
+    comment_conent	string	是	    评论内容
+    parent_id	    int	    否	    回复的评论的id
+    :return:
+    '''
+    user = g.user
+    if not user:
+        return jsonify(errno=RET.SESSIONERR,errmsg = "用户未登录")
+    #1.取到请求参数
+    news_id = request.json.get("news_id")
+    comment_conent= request.json.get("comment")
+    parent_id = request.json.get("parent_id")
+
+    #2.判断参数
+    if not all([news_id,comment_conent]):
+        return jsonify(errno=RET.PARAMERR,errmsg = "参数错误")
+    try:
+        news_id = int(news_id)
+        if parent_id:
+            parent_id = int(parent_id)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.PARAMERR,errmsg = "参数错误")
+
+    # 3.查询新闻,判断新闻是否存在
+    try:
+        news = News.query.get(news_id)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR,errmsg = "数据查询错误")
+
+    if not news :
+        return jsonify(errno=RET.NODATA,errmsg = "未查询到数据")
+
+    #3.初始化评论模型,并且赋值
+    comment = Comment()
+    comment.user_id = user.id
+    comment.news_id = news_id
+    comment.content = comment_conent
+    if parent_id:
+        comment.parent_id = parent_id
+
+    # 添加到数据库
+    #为什么要自己去commit()
+    #因为return的时候需要用的comment的 id
+    try:
+        db.session.add(comment)
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.error(e)
+        db.session.rollback()
+
+    return jsonify(errno = RET.OK,errmsg ="ok",comment=comment.to_dict())
+
+@news_blu.route("/newscollect",methods =["POST"])
 @user_login_data
 def collect_news():
     '''
@@ -64,7 +124,6 @@ def collect_news():
         #收藏
         if news not in user.collection_news:
             #添加到用户新闻收藏列表
-            print(1)
             user.collection_news.append(news)
 
     return jsonify(errno=RET.OK, errmsg="操作成功 ")
