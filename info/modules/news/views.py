@@ -57,7 +57,8 @@ def comment_like():
                 comment_like_model.user_id = user.id
                 comment_like_model.comment_id = comment.id
                 db.session.add(comment_like_model)
-                comment.like_count -=1
+                comment.like_count +=1
+
 
         else:
             #取消点赞评论
