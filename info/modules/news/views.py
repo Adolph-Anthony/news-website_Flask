@@ -171,19 +171,26 @@ def news_detail(news_id):
     #collection_news后面可以不用加all(),SQLAlchemy什么时候用到什么时候调用
     #判断用户是否收藏当前新闻,如果收藏
         if news in user.collection_news:
-
             is_collected = True
 
+    comments = []
+    #去查询评论数据
+    try:
+        comments= Comment.query.filter(Comment.news_id == news_id).order_by(Comment.create_time.desc()).all()
+    except Exception as e:
+        current_app.logger.error(e)
+    comment_dict_list = []
+    for comment in comments:
 
-
-
+        comment_dict = comment.to_dict()
+        comment_dict_list.append(comment_dict)
 
     data = {
         "user": user.to_dict() if user else None,
         "news":news.to_dict(),
         "news_dict_li": news_dict_li,
-        "is_collected":is_collected
-
+        "is_collected":is_collected,
+        "comments":comment_dict_list
     }
 
 
