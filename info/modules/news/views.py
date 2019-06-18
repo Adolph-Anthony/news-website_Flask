@@ -49,23 +49,25 @@ def comment_like():
         current_app.logger.error(e)
     if not comment:
         return jsonify(errno = RET.NODATA,errmsg = "评论不存在")
-    if action=="add":
-        #点赞评论
-        comment_like_model  = CommentLike.query.filter(CommentLike.user_id==user.id,CommentLike.comment_id==comment.id).first()
-        if not comment_like_model:
-            comment_like_model=CommentLike()
-            comment_like_model.user_id = user.id
-            comment_like_model.comment_id = comment.id
-            db.session.add(comment_like_model)
-            comment.like_count -=1
+    try:
+        if action=="add" :
+            comment_like_model  = CommentLike.query.filter(CommentLike.user_id==user.id,CommentLike.comment_id==comment.id).first()
+            if not comment_like_model:
+                comment_like_model=CommentLike()
+                comment_like_model.user_id = user.id
+                comment_like_model.comment_id = comment.id
+                db.session.add(comment_like_model)
+                comment.like_count -=1
 
-    else:
-        #取消点赞评论
-
-        comment_like_model  = CommentLike.query.filter(CommentLike.user_id==user.id,CommentLike.comment_id==comment.id).first()
-        if comment_like_model:
-            db.session.delete(comment_like_model)
-            comment.like_count -=1
+        else:
+            #取消点赞评论
+            comment_like_model  = CommentLike.query.filter(CommentLike.user_id==user.id,CommentLike.comment_id==comment.id).first()
+            if comment_like_model:
+                db.session.delete(comment_like_model)
+                comment.like_count -=1
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.PARAMERR,errmsg = "请先登录")
 
     try:
         db.session.commit()
@@ -242,9 +244,28 @@ def news_detail(news_id):
     except Exception as e:
         current_app.logger.error(e)
     comment_dict_list = []
-    for comment in comments:
+    comments_ids = []
+    if g.user:
+        try:
+            # 需求:当前用户在当前新闻里面都点赞了哪些评论
+            # 1. 查询出 当前 新闻的所有评论 (comments) 所有的评论ID   [1,2,3,4,5]
+            comments_ids = [comment.id for comment in comments]
+            print("comments_ids")
+            # 2. 再查询当前评论中哪些评论被当前用户所点赞  (CommentLike) 查询comment_id 在第一步的评论id列表内的所有数据,CommentLike.user_id == g.user.id
+            Comment_likes = CommentLike.query.filter(CommentLike.comment_id.in_(comments_ids),
+                                                     CommentLike.user_id == g.user.id).all()
+            print("Comment_likes")
+            # 3. 取到所有被点赞的评论id,第二步查询出来是一个[CommentLike] --> [3,5]
+            comments_ids = [comment_like.comment_id for comment_like in Comment_likes]
 
+        except Exception as e:
+            current_app.logger.error(e)
+
+    for comment in comments:
         comment_dict = comment.to_dict()
+        comment_dict["is_like"] = False
+        if comment.id in comments_ids:
+            comment_dict["is_like"] = True
         comment_dict_list.append(comment_dict)
 
     data = {
