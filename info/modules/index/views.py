@@ -1,4 +1,5 @@
 from flask import current_app, jsonify
+from flask import g
 from flask import render_template
 from flask import request
 from flask import session
@@ -6,6 +7,7 @@ from flask import session
 from info import constants
 from info import redis_store
 from info.models import User, News, Category
+from info.utils.common import user_login_data
 from info.utils.response_code import RET
 from . import index_blu
 @index_blu.route("/news_list")
@@ -62,22 +64,25 @@ def new_list():
     return jsonify(errno = RET.OK,errmsg= "OK",data = data)
 
 @index_blu.route('/')
+@user_login_data
 def index():
     '''
     显示首页
     1.如果用户已经登录,将当前登录用户数据传到模板中,以供显示
     :return:
     '''
-    #显示用户是否登录的逻辑
-    #取到用户id
-    user_id = session.get("user_id",None)
-    user = None
-    if user_id:
-        #去数据库里查询指定id的模型
-        try:
-            user = User.query.get(user_id)
-        except Exception as e:
-            current_app.logger.error(e)
+    # #显示用户是否登录的逻辑
+    # #取到用户id
+    # user_id = session.get("user_id",None)
+    # user = None
+    # if user_id:
+    #     #去数据库里查询指定id的模型
+    #     try:
+    #         user = User.query.get(user_id)
+    #     except Exception as e:
+    #         current_app.logger.error(e)
+
+    user = g.user
 
     #右侧的新闻排行逻辑
     news_list = []
@@ -96,7 +101,6 @@ def index():
 
     for category in categories:
         category_li.append(category.to_dict())
-
 
 
     data = {
