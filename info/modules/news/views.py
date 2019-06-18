@@ -26,6 +26,8 @@ def comment_like():
     comment_id = request.json.get("comment_id")
     news_id = request.json.get("news_id")
     action = request.json.get("action")
+    print(comment_id,news_id,action)
+    user = g.user
     if not all([news_id,comment_id,action]):
         return jsonify(errno=RET.PARAMERR,errmsg = "参数错误")
 
@@ -37,16 +39,16 @@ def comment_like():
         news_id = int(news_id)
     except Exception as e:
         current_app.logger.error(e)
-        return jsonify(errno=RET.PARAMERR,errmsg = "参数错误")
+        print(3)
 
+        return jsonify(errno=RET.PARAMERR,errmsg = "参数错误")
     comment = None
     try:
-        comment = Comment.quert.get(comment_id)
+        comment = Comment.query.get(comment_id)
     except Exception as e:
         current_app.logger.error(e)
     if not comment:
         return jsonify(errno = RET.NODATA,errmsg = "评论不存在")
-    user = g.user
     if action=="add":
         #点赞评论
         comment_like_model  = CommentLike.query.filter(CommentLike.user_id==user.id,CommentLike.comment_id==comment.id).first()
@@ -55,12 +57,15 @@ def comment_like():
             comment_like_model.user_id = user.id
             comment_like_model.comment_id = comment.id
             db.session.add(comment_like_model)
+            comment.like_count -=1
+
     else:
         #取消点赞评论
 
         comment_like_model  = CommentLike.query.filter(CommentLike.user_id==user.id,CommentLike.comment_id==comment.id).first()
         if comment_like_model:
-            comment_like_model.delete()
+            db.session.delete(comment_like_model)
+            comment.like_count -=1
 
     try:
         db.session.commit()
@@ -69,7 +74,7 @@ def comment_like():
         db.session.rollback()
         return jsonify(errno=RET.DBERR, errmsg="数据库操作失败")
 
-    return jsonify(errno = RET.OK,errmsg="数据库操作失败")
+    return jsonify(errno = RET.OK,errmsg="成功")
 @news_blu.route("/news_comment",methods = ["POST"])
 @user_login_data
 def comment():
