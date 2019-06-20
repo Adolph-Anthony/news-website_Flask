@@ -7,6 +7,19 @@ from info.modules.profile import profile_blu
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
 
+@profile_blu.route("/pic_info",methods= ["POST","GET"])
+@user_login_data
+def pic_info():
+    if request.method == "GET":
+        data = {
+
+            "user": g.user.to_dict()
+        }
+        return  render_template("news/user_pic_info.html",data = data)
+    # TODO 如果是 POST表示修改头像
+
+
+
 
 @profile_blu.route("/base_info",methods= ["POST","GET"])
 @user_login_data
