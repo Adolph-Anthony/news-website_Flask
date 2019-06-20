@@ -14,12 +14,16 @@
 
 
 {% block contentBlock %}
-    <div class="user_menu_con fl">
+
+<div class="user_menu_con fl">
+    <div class="user_center_pic fl">
         <img src={% if data.user.avatar_url %}
         {{ data.user.avatar_url }}
         {% else %}
             "../../static/news/images/user_pic.png"
         {% endif %} alt="用户图片">
+
+    </div>
     <div class="user_center_name">{{ data.user.nick_name }}</div>
 
     <ul class="option_list">
